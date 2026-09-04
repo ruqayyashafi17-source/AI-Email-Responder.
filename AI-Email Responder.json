@@ -1,0 +1,304 @@
+{
+  "name": "AI-Email Responder",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19YjkjS6sdz46J8oDSZeBGYtIJzTTLJ3Bo3kjv5dbn4Y",
+          "mode": "list",
+          "cachedResultName": "AI-Email Responder",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19YjkjS6sdz46J8oDSZeBGYtIJzTTLJ3Bo3kjv5dbn4Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.format('yyyy-MM-dd HH:mm') }}",
+            "Subject": "={{ $('Gmail Trigger (Unread)1').item.json.Subject }}",
+            "AI Reply Sent": "={{ $('AI Agent1').item.json.output }}",
+            "Sender Name ": "={{ $('Gmail Trigger (Unread)1').item.json.From }}",
+            "Inquiry Message": "={{ $('Gmail Trigger (Unread)1').item.json.snippet }}",
+            "Email": "={{ $('Gmail Trigger (Unread)1').item.json.From }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sender Name ",
+              "displayName": "Sender Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject",
+              "displayName": "Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inquiry Message",
+              "displayName": "Inquiry Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Reply Sent",
+              "displayName": "AI Reply Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        624,
+        -64
+      ],
+      "id": "4da9c304-ec71-4471-8184-6e52f38ca96b",
+      "name": "Log to Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "EdrR245emIxog24Y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -528,
+        -48
+      ],
+      "id": "36d8b85c-eba0-47af-915a-6671c348a6df",
+      "name": "Gmail Trigger (Unread)1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "MOCI8aGfEYgsLfP3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e6a2b389-1111-4222-a888-000000000001",
+              "leftValue": "={{ $json.snippet }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -48
+      ],
+      "id": "e0e5d5eb-4ad9-48cc-96d1-f0e462258700",
+      "name": "Professional Client Filter1"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger (Unread)1').item.json.snippet }}",
+        "options": {
+          "systemMessage": "You are a warm, highly professional Client Relations Manager for Oura Identity Digital Brand Agency. Respond directly to client inquiries in fluent, natural, professional English. Do not use AI jargon, automated disclaimers, or robot-like phrases (such as \"As an AI...\"). Keep the response structured, clear, and focused on branding and digital agency services."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        64,
+        -64
+      ],
+      "id": "6c83ff3f-64f6-43db-99c5-cf60f46dec60",
+      "name": "AI Agent1",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-flash-lite-latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        64,
+        224
+      ],
+      "id": "53714e4a-cf0b-454b-b2d0-a7c361530269",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pkP3xuMKjTnKWTPQ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger (Unread)1').item.json.From }}",
+        "subject": "={{ $('Gmail Trigger (Unread)1').item.json.Subject }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        416,
+        -64
+      ],
+      "id": "aa363421-9261-47cf-9632-67ce3bfe2409",
+      "name": "Send Gmail Response",
+      "webhookId": "c4a2cadc-13f9-4db4-8c3c-5e5b617497a9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "MOCI8aGfEYgsLfP3",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger (Unread)1": {
+      "main": [
+        [
+          {
+            "node": "Professional Client Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Professional Client Filter1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send Gmail Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Gmail Response": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9087dfca-b00c-43a7-b40c-6c2f750845f6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da5cb36cfab4274abce69e948f426570b6f3968f3db45dfa0f392a924e45913e"
+  },
+  "nodeGroups": [],
+  "id": "vJKor3j1ghJ60qbC",
+  "tags": []
+}
