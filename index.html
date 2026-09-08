@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oura Identity - AI Email Responder</title>
+    <title>Oura Identity AI Email Responder</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
         }
         .card {
             background-color: #1e293b;
-            padding: 30px;
+            padding: 35px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             text-align: center;
@@ -26,30 +26,38 @@
         h1 {
             color: #6366f1;
             font-size: 22px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         p {
             color: #94a3b8;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 22px;
         }
-        .badge {
+        .btn-email {
             display: inline-block;
             background-color: #22c55e;
             color: #000000;
-            padding: 5px 12px;
+            padding: 12px 24px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 12px;
-            margin-top: 15px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-email:hover {
+            background-color: #16a34a;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Oura Identity AI Agent</h1>
-        <p>Automated Client Email Responder System is up and running in the background.</p>
-        <div class="badge">System Active</div>
+        <h1>Oura Identity AI Email Responder</h1>
+        <p>Automated Client Email Responder System is up and running in the background. Click below to send a test inquiry email directly.</p>
+        
+        <a href="mailto:ruqayyashafi17@gmail.com?subject=Project Inquiry - Oura Identity&body=Hi Oura Identity Team,%0D%0A%0D%0AI would like to inquire about your branding services.%0D%0A%0D%0ABest regards," class="btn-email">📧 Send Email Inquiry</a>
     </div>
 </body>
 </html>
